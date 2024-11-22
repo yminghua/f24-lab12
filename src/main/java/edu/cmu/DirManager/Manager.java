@@ -10,15 +10,26 @@ public class Manager {
      * @return 0 if the directory creation was successful
      *        -1 if the directory already exists,
      *        -2 if the path is invalid
+     * 
+     * magic number, not self-explanatory, failure is not informatively.
      */
-    public int newDirectory(String path) {
+    public DirectoryCreationStatus newDirectory(String path) {
         if (dirOps.checkDirectoryExists(path)) {
-            return -1;
+            return DirectoryCreationStatus.DIRECTORY_ALREADY_EXISTS;
         } else if (!dirOps.checkPathValid(path)) {
-            return -2;
+            return DirectoryCreationStatus.INVALID_PATH;
         } else {
             dirOps.createDirectory(path);
-            return 0;
+            return DirectoryCreationStatus.SUCCESS;
         }
+    }
+
+    /**
+     * Enum representing the status of a directory creation operation.
+     */
+    enum DirectoryCreationStatus {
+        SUCCESS,                   // Directory creation was successful
+        DIRECTORY_ALREADY_EXISTS,  // The directory already exists
+        INVALID_PATH               // The specified path is invalid
     }
 }

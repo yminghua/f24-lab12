@@ -9,14 +9,15 @@ public class LibraryAccount {
      * share a single account, the user ID is of the form "libraryID:userName".
      * e.g., "12345:John Doe"
      *
-     * @param userId the ID of the user whose books are to be retrieved
+     * @param name the name of the user
+     * @param id the library ID of the user
      * @return an array of Book objects the user has checked out
-     * 
-     * Didn't enforce/validate the input userId String. So if the input is not
-     * in the format of libraryID:userName, this API won't fail immediately,
-     * and may not handle the error gracefully.
+     * @throws IllegalArgumentException if the name or id is null or blank
      */
-    public Book[] getBooks(UserId userId) {
-        return libraryService.getBooks(userId.getUserName(), userId.getLibraryID());        
+    public Book[] getBooks(String name, String id) {
+        if (name == null || name.isBlank() || id == null || id.isBlank()) {
+            throw new IllegalArgumentException("Both name and id must be non-null and non-blank.");
+        }
+        return libraryService.getBooks(name, id);
     }
 }

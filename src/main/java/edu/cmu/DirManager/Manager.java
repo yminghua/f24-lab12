@@ -1,35 +1,43 @@
 package edu.cmu.DirManager;
 
+/**
+ * Manager for directory operations.
+ */
 public class Manager {
     private DirOps dirOps;
-    
-    /**
-     * Creates a new directory at the specified path.
-     *
-     * @param path the path where the new directory should be created
-     * @return 0 if the directory creation was successful
-     *        -1 if the directory already exists,
-     *        -2 if the path is invalid
-     * 
-     * magic number, not self-explanatory, failure is not informatively.
-     */
-    public DirectoryCreationStatus newDirectory(String path) {
-        if (dirOps.checkDirectoryExists(path)) {
-            return DirectoryCreationStatus.DIRECTORY_ALREADY_EXISTS;
-        } else if (!dirOps.checkPathValid(path)) {
-            return DirectoryCreationStatus.INVALID_PATH;
-        } else {
-            dirOps.createDirectory(path);
-            return DirectoryCreationStatus.SUCCESS;
-        }
-    }
 
     /**
-     * Enum representing the status of a directory creation operation.
+     * Creates a new directory at the specified path.
+     * 
+     * @param path the path where the new directory should be created
+     * @throws DirectoryAlreadyExistsException if the directory already exists
+     * @throws InvalidPathException if the specified path is invalid
      */
-    enum DirectoryCreationStatus {
-        SUCCESS,                   // Directory creation was successful
-        DIRECTORY_ALREADY_EXISTS,  // The directory already exists
-        INVALID_PATH               // The specified path is invalid
+    public void newDirectory(String path) throws DirectoryAlreadyExistsException, InvalidPathException {
+        if (dirOps.checkDirectoryExists(path)) {
+            throw new DirectoryAlreadyExistsException("Directory already exists at path: " + path);
+        } else if (!dirOps.checkPathValid(path)) {
+            throw new InvalidPathException("The path is invalid: " + path);
+        } else {
+            dirOps.createDirectory(path);
+        }
+    }
+}
+
+/**
+ * Exception thrown when attempting to create a directory that already exists.
+ */
+class DirectoryAlreadyExistsException extends Exception {
+    public DirectoryAlreadyExistsException(String message) {
+        super(message);
+    }
+}
+
+/**
+ * Exception thrown when the specified path is invalid.
+ */
+class InvalidPathException extends Exception {
+    public InvalidPathException(String message) {
+        super(message);
     }
 }
